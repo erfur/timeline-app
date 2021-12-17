@@ -1,0 +1,78 @@
+|--[ zin3txt v0.9 ]------------------------------------------------------------|
+
+          ████████╗██╗███╗   ███╗███████╗██╗     ██╗███╗   ██╗███████╗
+          ╚══██╔══╝██║████╗ ████║██╔════╝██║     ██║████╗  ██║██╔════╝
+             ██║   ██║██╔████╔██║█████╗  ██║     ██║██╔██╗ ██║█████╗
+             ██║   ██║██║╚██╔╝██║██╔══╝  ██║     ██║██║╚██╗██║██╔══╝
+             ██║   ██║██║ ╚═╝ ██║███████╗███████╗██║██║ ╚████║███████╗
+             ╚═╝   ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝╚══════╝
+
+                             █████╗ ██████╗ ██████╗
+                            ██╔══██╗██╔══██╗██╔══██╗
+                            ███████║██████╔╝██████╔╝
+                            ██╔══██║██╔═══╝ ██╔═══╝
+                            ██║  ██║██║     ██║
+                            ╚═╝  ╚═╝╚═╝     ╚═╝
+
+|------------------------------------------------------------------------------|
+|--[ Author: erfur ]-----------------------------------------------------------|
+|------------------------------------------------------------------------------|
+
+
+|--[ 01 - intro ]--------------------------------------------------------------|
+
+I've been keeping a timeline journal for a while now. This helps me keep track
+of the time I spend on both personal endeavors and business tasks. It's a little
+hard to carry a physical notebook and a pen everywhere and the cost of keeping
+them close by could be eliminated by a simple app on my phone. Phones are always
+close by anyway.
+
+
+|--[ 02 - technical requirements ]---------------------------------------------|
+
+I plan on using the app on an Android phone and maybe as a web service in the
+long run. My initial requirements are as follows:
+
+    - visualize the time spent on different tasks
+    - visualize the time spent awake in a day
+    - mark a point in time
+    - be able to tag a timeframe between two marks
+    - leave detailed note for a timeframe aside from a tag
+    - visualize the time of waking up and going to sleep
+
+The data that's built up in a day should be accessible later on. This requires a
+database. Judging from the type of data that will be saved, a nosql database
+should suffice.
+
+I'll keep the project on my gitea server until it's ready to use on a daily
+basis.
+
+I currently do not know if using frameworks will help in any way, but I'm down
+to try.
+
+
+|--[ 03 - initial steps ]------------------------------------------------------|
+
+1. Choose a framework to base the app on
+    - Initially I tried to go with the TimelineView project [1] that is written
+      in Kotlin. That proved to be difficult without the technical knowledge of
+      android app development. Then I switched to getting the concept working as
+      a web application. I will probably be using Vue.js to develop a prototype,
+      however I think I should get a basic web development course first not to
+      get bogged down in basics. [2] seems like a decent course.
+
+2. Experiment with graphics
+    - CSS seems promising for prototyping this kind of a ui.
+
+3. Design the data structure
+    - After a little experimentation, its obvious that the data model should be
+      designed first, not after the ui is created. Also it's way easier to work
+      with text output while trying to figure out the business logic.
+
+4. Implement marking time
+
+
+|--[ 0A - references ]----------------------------------------------------------|
+
+[1] https://github.com/vipulasri/Timeline-View
+[2] https://www.khanacademy.org/computing/computer-programming
