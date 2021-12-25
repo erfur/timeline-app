@@ -69,46 +69,61 @@ Timeline.prototype.toString = function () {
   return `${this.getArr()}`;
 }
 
-function TimelineApp() {
+function TimelineButton(name, fcn) {
+  this.elem = document.createElement(`timeline-button-${name}`);
+  this.elem.innerHTML = name;
+  this.elem.style.backgroundColor = "#4CAF50";
+  this.elem.style.color = "white";
+  this.elem.style.border = "2px solid green";
+  this.elem.style.display = "block";
+  this.elem.style.fontSize = "24px";
+  this.elem.style.textAlign = "center";
+  this.elem.style.textDecoration = "none";
+  this.elem.style.padding = "15px 32px";
+  this.elem.style.borderRadius = "12px";
+  this.elem.style.width = "200px";
+  this.elem.style.fontFamily = "Arial, Helvetica, sans-serif"
+  this.elem.style.cursor = "pointer";
+  this.elem.style.userSelect = "none";
 
+  this.elem.onclick = fcn;
+
+  return this.elem;
+}
+
+timelineApp = function () {
+
+  function markFcn(){
+    timelineHist.push(new Timeline());
+    window.localStorage.setItem('th', JSON.stringify(timelineHist));
+    update();
+  };
+
+  function clearFcn() {
+    console.log(timelineHist);
+    timelineHist = [];
+    window.localStorage.setItem('th', JSON.stringify(timelineHist));
+    update();
+  };
+
+  function update() {
+    appElem.textContent = "Test: " + JSON.stringify(timelineHist);
+    appElem.appendChild(markButton);
+    appElem.appendChild(clearButton);
+  };
+
+  // init code
   if (window.localStorage.getItem('th') === null) {
     window.localStorage.setItem('th', JSON.stringify([]));
     console.log("No th found, creating one now...");
   }
 
-  var timelineHist = JSON.parse(window.localStorage.getItem('th'));
+  let timelineHist = JSON.parse(window.localStorage.getItem('th'));
 
-  this.getHist = () => timelineHist;
-  this.addHist = (x) => timelineHist.push(x);
+  const markButton = new TimelineButton("Mark", markFcn);
+  const clearButton = new TimelineButton("Clear", clearFcn);
 
-  let btn = document.createElement("timeline-button");
-
-  btn.innerHTML = "mark";
-  btn.style.height = "50px";
-  btn.style.width = "50px";
-  btn.style.background = "grey";
-
-  btn.onclick = function () {
-    timelineHist.push(new Timeline());
-    window.localStorage.setItem('th', JSON.stringify(timelineHist));
-  }
-
-  var appElem = document.createElement("timeline-app");
-  appElem.textContent = "Test: " + JSON.stringify(timelineHist);
-  document.body.appendChild(appElem);
-
-  var ta = document.getElementsByTagName("timeline-app")
-  console.log(`ta len: ${ta.length}`);
-  for (i=0; i<ta.length; i++) {
-    ta[i].appendChild(btn);
-  }
-
-  // var currTimeline = new Timeline();
-
-  // timelineHist.push(currTimeline);
-  // currTimeline.addMark();
-  // currTimeline.addMark();
-
-}
-
-var t = new TimelineApp();
+  let appElem = document.getElementsByTagName("timeline-app")[0];
+  update();
+  // end init
+}();
