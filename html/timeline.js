@@ -1,6 +1,6 @@
 // logic ======================================================================
 
-function TimePoint(id = 0, wakeupTime = false, sleepTime = true) {
+function TimePoint(id = 0) {
   var id = id;
   var date = new Date();
   this.type = 'TimePoint';
@@ -13,6 +13,8 @@ function TimePoint(id = 0, wakeupTime = false, sleepTime = true) {
 
   this.setWakeupTime = (b) => wakeupTime = b;
   this.setSleepTime = (b) => sleepTime = b;
+  this.isWakeupTime = () => wakeupTime;
+  this.isSleepTime = () => sleepTime;
 
   this.equal = x => {
     x.getHours() === this.getHours()
@@ -51,7 +53,7 @@ function Timeline() {
     return (currId += 1);
   }
 
-  this.addMark = function () {
+  this.addMark = function (sleepTime=false) {
 
     var m = new TimePoint(this.getId());
 
@@ -60,6 +62,10 @@ function Timeline() {
       m.setWakeupTime(true);
       markArr.push(m);
       return;
+    }
+
+    if (sleepTime) {
+      m.setSleepTime(true);
     }
 
     var pm = this.getLastPoint();
@@ -77,31 +83,23 @@ Timeline.prototype.toString = function () {
 // UI =========================================================================
 
 function TimelineButton(name, fcn) {
-  this.elem = document.createElement(`timeline-button-${name}`);
+  this.elem = document.createElement('timeline-button');
   this.elem.innerHTML = name;
-  this.elem.style.backgroundColor = "#4CAF50";
-  this.elem.style.color = "white";
-  this.elem.style.border = "2px solid green";
-  this.elem.style.display = "block";
-  this.elem.style.fontSize = "24px";
-  this.elem.style.textAlign = "center";
-  this.elem.style.textDecoration = "none";
-  this.elem.style.padding = "15px 32px";
-  this.elem.style.borderRadius = "12px";
-  this.elem.style.width = "200px";
-  this.elem.style.fontFamily = "Arial, Helvetica, sans-serif"
-  this.elem.style.cursor = "pointer";
-  this.elem.style.userSelect = "none";
-
+  this.elem.id = name;
   this.elem.onclick = fcn;
 
   return this.elem;
 }
 
 function TimePointElem(time) {
-  let elem = document.createElement(`timeline-timepoint`);
+  let elem = document.createElement('timeline-timepoint');
   elem.innerHTML = time.toString();
-  elem.style.display = "block";
+
+  if (time.isWakeupTime()) {
+    elem.className = "wakeup";
+  } else if (time.isSleepTime()) {
+    elem.className = "sleep";
+  }
 
   return elem;
 }
@@ -109,8 +107,6 @@ function TimePointElem(time) {
 function TimeSpanElem(span) {
   let elem = document.createElement('timeline-timespan');
   elem.innerHTML = span.toString();
-  elem.style.display = "block";
-
   return elem;
 }
 
@@ -124,17 +120,26 @@ timelineApp = function () {
     updateScreen();
   };
 
+  function endTime() {
+    currTimeline.addMark(sleepTime=true);
+    window.localStorage.setItem('th', JSON.stringify(timelineHist));
+    updateScreen();
+  }
+
   function clearHistory() {
     // console.log(timelineHist);
     timelineHist = [];
+    currTimeline = new Timeline();
     window.localStorage.setItem('th', JSON.stringify(timelineHist));
     updateScreen();
   };
 
   function updateScreen() {
-    appElem.textContent = "Test: " + JSON.stringify(timelineHist);
+    // appElem.textContent = "Test: " + JSON.stringify(timelineHist);
+    appElem.textContent = "";
 
     appElem.appendChild(markButton);
+    appElem.appendChild(endButton);
     appElem.appendChild(clearButton);
     decorateMainElement();
   };
@@ -160,6 +165,7 @@ timelineApp = function () {
   let currTimeline = timelineHist.at(-1);
 
   const markButton = new TimelineButton("Mark", markTime);
+  const endButton = new TimelineButton("End", endTime);
   const clearButton = new TimelineButton("Clear", clearHistory);
 
   let appElem = document.getElementsByTagName("timeline-app")[0];
