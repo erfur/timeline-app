@@ -1,6 +1,9 @@
-function MarkPoint(id = 0, wakeupTime = false, sleepTime = true) {
+// logic ======================================================================
+
+function TimePoint(id = 0, wakeupTime = false, sleepTime = true) {
   var id = id;
   var date = new Date();
+  this.type = 'TimePoint';
 
   this.getHours = () => date.getHours();
   this.getMinutes =  () => date.getMinutes();
@@ -17,20 +20,22 @@ function MarkPoint(id = 0, wakeupTime = false, sleepTime = true) {
   };
 };
 
-MarkPoint.prototype.toString = function () {
-  return `${this.getHours()}:${this.getMinutes()}`;
+TimePoint.prototype.toString = function () {
+  return `${this.getHours().toString().padStart(2, '0')}`
+          + `:${this.getMinutes().toString().padStart(2, '0')}`
 }
 
-function MarkSpan(id = 0, start, end) {
+function TimeSpan(id = 0, start, end) {
   var startPoint = start;
   var endPoint = end;
+  this.type = 'TimeSpan';
 
   this.getStartPoint = () => startPoint;
   this.getEndPoint = () => endPoint;
   this.getDelta = () => endPoint - startPoint;
 };
 
-MarkSpan.prototype.toString = function () {
+TimeSpan.prototype.toString = function () {
   return `${this.getStartPoint()}-${this.getEndPoint()}`;
 }
 
@@ -46,9 +51,9 @@ function Timeline() {
     return (currId += 1);
   }
 
-  this.addMark = function (mark) {
+  this.addMark = function () {
 
-    var m = new MarkPoint(this.getId());
+    var m = new TimePoint(this.getId());
 
     // First mark is the wakeup time
     if (this.isFirstMark()) {
@@ -58,7 +63,7 @@ function Timeline() {
     }
 
     var pm = this.getLastPoint();
-    var s = new MarkSpan(this.getId(), m, pm);
+    var s = new TimeSpan(this.getId(), pm, m);
 
     markArr.push(s);
     markArr.push(m);
@@ -68,6 +73,8 @@ function Timeline() {
 Timeline.prototype.toString = function () {
   return `${this.getArr()}`;
 }
+
+// UI =========================================================================
 
 function TimelineButton(name, fcn) {
   this.elem = document.createElement(`timeline-button-${name}`);
@@ -91,26 +98,56 @@ function TimelineButton(name, fcn) {
   return this.elem;
 }
 
+function TimePointElem(time) {
+  let elem = document.createElement(`timeline-timepoint`);
+  elem.innerHTML = time.toString();
+  elem.style.display = "block";
+
+  return elem;
+}
+
+function TimeSpanElem(span) {
+  let elem = document.createElement('timeline-timespan');
+  elem.innerHTML = span.toString();
+  elem.style.display = "block";
+
+  return elem;
+}
+
+// main =======================================================================
+
 timelineApp = function () {
 
-  function markFcn(){
-    timelineHist.push(new Timeline());
+  function markTime(){
+    currTimeline.addMark();
     window.localStorage.setItem('th', JSON.stringify(timelineHist));
-    update();
+    updateScreen();
   };
 
-  function clearFcn() {
-    console.log(timelineHist);
+  function clearHistory() {
+    // console.log(timelineHist);
     timelineHist = [];
     window.localStorage.setItem('th', JSON.stringify(timelineHist));
-    update();
+    updateScreen();
   };
 
-  function update() {
+  function updateScreen() {
     appElem.textContent = "Test: " + JSON.stringify(timelineHist);
+
     appElem.appendChild(markButton);
     appElem.appendChild(clearButton);
+    decorateMainElement();
   };
+
+  function decorateMainElement() {
+    for (var mark of currTimeline.getArr()) {
+      if (mark.type === 'TimePoint') {
+        appElem.appendChild(new TimePointElem(mark));
+      } else if (mark.type === 'TimeSpan') {
+        appElem.appendChild(new TimeSpanElem(mark));
+      }
+    }
+  }
 
   // init code
   if (window.localStorage.getItem('th') === null) {
@@ -119,11 +156,13 @@ timelineApp = function () {
   }
 
   let timelineHist = JSON.parse(window.localStorage.getItem('th'));
+  timelineHist.push(new Timeline());
+  let currTimeline = timelineHist.at(-1);
 
-  const markButton = new TimelineButton("Mark", markFcn);
-  const clearButton = new TimelineButton("Clear", clearFcn);
+  const markButton = new TimelineButton("Mark", markTime);
+  const clearButton = new TimelineButton("Clear", clearHistory);
 
   let appElem = document.getElementsByTagName("timeline-app")[0];
-  update();
+  updateScreen();
   // end init
 }();
