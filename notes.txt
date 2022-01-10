@@ -72,7 +72,18 @@ to try.
 4. Implement marking time
 
 
+|--[ 04 - learning proper JS ]--------------------------------------------------|
+
+Topics to study further:
+    - Singleton vs Module pattern
+    - ES6
+    - design patterns
+        - Check out [3][4].
+
+
 |--[ 0A - references ]----------------------------------------------------------|
 
 [1] https://github.com/vipulasri/Timeline-View
 [2] https://www.khanacademy.org/computing/computer-programming
+[3] https://www.digitalocean.com/community/tutorial_series/javascript-design-patterns
+[4] https://www.w3.org/wiki/JavaScript_best_practices

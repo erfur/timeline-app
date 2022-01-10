@@ -1,45 +1,52 @@
 // logic ======================================================================
 
-function TimePoint(id = 0) {
-  var id = id;
-  var date = new Date();
-  this.type = 'TimePoint';
+class TimePoint {
+  constructor() {
+    this.type = 'TimePoint';
+    this.date = new Date();
+    this.wakeupTime = false;
+    this.sleepTime = false;
+  }
 
-  this.getHours = () => date.getHours();
-  this.getMinutes =  () => date.getMinutes();
+  get hours() {
+    return this.date.getHours();
+  }
 
-  var wakeupTime = wakeupTime;
-  var sleepTime = sleepTime;
+  get minutes() {
+    return this.date.getMinutes();
+  }
 
-  this.setWakeupTime = (b) => wakeupTime = b;
-  this.setSleepTime = (b) => sleepTime = b;
-  this.isWakeupTime = () => wakeupTime;
-  this.isSleepTime = () => sleepTime;
+  get epoch() {
+    return Math.trunc(this.date.getTime() / 1000);
+  }
 
-  this.equal = x => {
+  equal(x) {
     x.getHours() === this.getHours()
       && x.getMinutes() === this.getMinutes();
-  };
+  }
+
+  toString() {
+    return `${this.hours.toString().padStart(2, '0')}`
+            + `:${this.minutes.toString().padStart(2, '0')}`;
+  }
 };
 
-TimePoint.prototype.toString = function () {
-  return `${this.getHours().toString().padStart(2, '0')}`
-          + `:${this.getMinutes().toString().padStart(2, '0')}`
-}
+class TimeSpan {
+  constructor(id = 0, start, end) {
+    this.type = 'TimeSpan';
+    this.id = id;
+    this.startPoint = start;
+    this.endPoint = end;
+  }
 
-function TimeSpan(id = 0, start, end) {
-  var startPoint = start;
-  var endPoint = end;
-  this.type = 'TimeSpan';
+  get delta() {
+    return this.endPoint.epoch - this.startPoint.epoch;
+  }
 
-  this.getStartPoint = () => startPoint;
-  this.getEndPoint = () => endPoint;
-  this.getDelta = () => endPoint - startPoint;
+  toString() {
+    return `${this.startPoint}-${this.endPoint}`;
+  }
 };
-
-TimeSpan.prototype.toString = function () {
-  return `${this.getStartPoint()}-${this.getEndPoint()}`;
-}
 
 function Timeline() {
   var markArr = [];
@@ -59,13 +66,13 @@ function Timeline() {
 
     // First mark is the wakeup time
     if (this.isFirstMark()) {
-      m.setWakeupTime(true);
+      m.wakeupTime = true;
       markArr.push(m);
       return;
     }
 
     if (sleepTime) {
-      m.setSleepTime(true);
+      m.sleepTime = true;
     }
 
     var pm = this.getLastPoint();
@@ -95,9 +102,9 @@ function TimePointElem(time) {
   let elem = document.createElement('timeline-timepoint');
   elem.innerHTML = time.toString();
 
-  if (time.isWakeupTime()) {
+  if (time.wakeupTime) {
     elem.className = "wakeup";
-  } else if (time.isSleepTime()) {
+  } else if (time.sleepTime) {
     elem.className = "sleep";
   }
 
@@ -105,8 +112,20 @@ function TimePointElem(time) {
 }
 
 function TimeSpanElem(span) {
+  // create span and the line
   let elem = document.createElement('timeline-timespan');
-  elem.innerHTML = span.toString();
+  let line = document.createElement('line');
+
+  // fill the span with temp content
+  elem.innerHTML = `${span.delta.toString()} secs`;
+
+  // set heights based on time difference
+  // the value is temporarily exaggerated for testing
+  elem.style.height = `${30 + 10*span.delta}px`;
+  line.style.height = `${100 + 10*span.delta}px`;
+
+  // add the line to the span as a child
+  elem.appendChild(line);
   return elem;
 }
 

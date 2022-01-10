@@ -40,14 +40,14 @@ timeline-timespan {
     box-shadow: 0 0 2px black;
 }
 
-timeline-timespan::before {
+timeline-timespan > line {
     content: "";
     width: 20px;
     height: 100px;
     position: absolute;
     left: 30px;
     margin-top: -32px;
-    display: block;
+    display: inline;
     background: #1d3c45;
     z-index: -1;
     box-shadow: 0 0 5px black;
