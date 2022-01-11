@@ -24,7 +24,12 @@ timeline-timepoint.sleep::after {
 }
 
 timeline-timespan {
-    display : block;
+    display: inline-flex;
+    width: 100%;
+}
+
+timeline-timespan > card {
+    display : inline-block;
     background-color : #d2601a;
     color : #fff1e1;
     border : 2px solid #a04812;
@@ -34,7 +39,7 @@ timeline-timespan {
     /* left: 10px; */
     padding : 15px;
     /* padding-left: 64px; */
-    width : inherit;
+    width : 40%;
     font-family : Arial, Helvetica, sans-serif;
     margin-left: 40px;
     box-shadow: 0 0 2px black;
@@ -47,7 +52,7 @@ timeline-timespan > line {
     position: absolute;
     left: 30px;
     margin-top: -32px;
-    display: inline;
+    display: inline-block;
     background: #1d3c45;
     z-index: -1;
     box-shadow: 0 0 5px black;
@@ -62,14 +67,19 @@ timeline-button {
     text-align : center;
     text-decoration : none;
     padding : 15px 32px;
-    width : 200px;
+    width : 100%;
     font-family : Arial, Helvetica, sans-serif;
     cursor : pointer;
     user-select : none;
     box-shadow: 0 0 2px black;
 }
 
+timeline-button.addTag {
+    display: inline-block;
+    width: 20%;
+}
+
 timeline-app {
-    width: 320px;
+    width: 640px;
     display: block;
 }

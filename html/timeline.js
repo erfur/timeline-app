@@ -1,12 +1,11 @@
 // logic ======================================================================
 
 class TimePoint {
-  constructor() {
-    this.type = 'TimePoint';
-    this.date = new Date();
-    this.wakeupTime = false;
-    this.sleepTime = false;
-  }
+
+  type = 'TimePoint';
+  date = new Date();
+  wakeupTime = false;
+  sleepTime = false;
 
   get hours() {
     return this.date.getHours();
@@ -20,7 +19,7 @@ class TimePoint {
     return Math.trunc(this.date.getTime() / 1000);
   }
 
-  equal(x) {
+  isEqual(x) {
     x.getHours() === this.getHours()
       && x.getMinutes() === this.getMinutes();
   }
@@ -32,8 +31,10 @@ class TimePoint {
 };
 
 class TimeSpan {
+
+  type = 'TimeSpan';
+
   constructor(id = 0, start, end) {
-    this.type = 'TimeSpan';
     this.id = id;
     this.startPoint = start;
     this.endPoint = end;
@@ -48,26 +49,32 @@ class TimeSpan {
   }
 };
 
-function Timeline() {
-  var markArr = [];
-  this.isFirstMark = () => markArr.length == 0;
+class Timeline {
 
-  this.getArr = () => markArr;
-  this.getLastPoint = () => markArr.at(-1);
+  markArr = [];
+  currid = 0;
 
-  var currId = 0;
-  this.getId = function () {
-    return (currId += 1);
+  get isFirstMark() {
+    return this.markArr.length == 0;
   }
 
-  this.addMark = function (sleepTime=false) {
+  get lastPoint() {
+    return this.markArr.at(-1);
+  }
 
-    var m = new TimePoint(this.getId());
+  newId() {
+    this.currId += 1;
+    return this.currId;
+  }
+
+  addMark(sleepTime=false) {
+
+    var m = new TimePoint(this.newId());
 
     // First mark is the wakeup time
-    if (this.isFirstMark()) {
+    if (this.isFirstMark) {
       m.wakeupTime = true;
-      markArr.push(m);
+      this.markArr.push(m);
       return;
     }
 
@@ -75,24 +82,24 @@ function Timeline() {
       m.sleepTime = true;
     }
 
-    var pm = this.getLastPoint();
-    var s = new TimeSpan(this.getId(), pm, m);
+    var pm = this.lastPoint;
+    var s = new TimeSpan(this.newId(), pm, m);
 
-    markArr.push(s);
-    markArr.push(m);
-  };
-}
+    this.markArr.push(s);
+    this.markArr.push(m);
+  }
 
-Timeline.prototype.toString = function () {
-  return `${this.getArr()}`;
-}
+  toString() {
+    return `${this.markArr}`;
+  }
+};
 
 // UI =========================================================================
 
 function TimelineButton(name, fcn) {
   this.elem = document.createElement('timeline-button');
   this.elem.innerHTML = name;
-  this.elem.id = name;
+  this.elem.className = name;
   this.elem.onclick = fcn;
 
   return this.elem;
@@ -114,18 +121,32 @@ function TimePointElem(time) {
 function TimeSpanElem(span) {
   // create span and the line
   let elem = document.createElement('timeline-timespan');
+  let card = document.createElement('card');
   let line = document.createElement('line');
+  let isButtonsActive = false;
 
   // fill the span with temp content
-  elem.innerHTML = `${span.delta.toString()} secs`;
+  card.innerHTML = `${span.delta.toString()} secs`;
 
   // set heights based on time difference
   // the value is temporarily exaggerated for testing
-  elem.style.height = `${30 + 10*span.delta}px`;
+  card.style.height = `${30 + 10*span.delta}px`;
   line.style.height = `${100 + 10*span.delta}px`;
+
+  card.onclick = function() {
+    if (isButtonsActive === false) {
+      let addTagButton = new TimelineButton('addTag', function (){});
+      elem.appendChild(addTagButton);
+      isButtonsActive = true;
+    } else {
+      elem.removeChild(elem.lastElementChild);
+      isButtonsActive = false;
+    }
+  }
 
   // add the line to the span as a child
   elem.appendChild(line);
+  elem.appendChild(card);
   return elem;
 }
 
@@ -146,7 +167,6 @@ timelineApp = function () {
   }
 
   function clearHistory() {
-    // console.log(timelineHist);
     timelineHist = [];
     currTimeline = new Timeline();
     window.localStorage.setItem('th', JSON.stringify(timelineHist));
@@ -154,7 +174,6 @@ timelineApp = function () {
   };
 
   function updateScreen() {
-    // appElem.textContent = "Test: " + JSON.stringify(timelineHist);
     appElem.textContent = "";
 
     appElem.appendChild(markButton);
@@ -164,7 +183,7 @@ timelineApp = function () {
   };
 
   function decorateMainElement() {
-    for (var mark of currTimeline.getArr()) {
+    for (var mark of currTimeline.markArr) {
       if (mark.type === 'TimePoint') {
         appElem.appendChild(new TimePointElem(mark));
       } else if (mark.type === 'TimeSpan') {
