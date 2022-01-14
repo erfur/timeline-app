@@ -127,6 +127,16 @@ function TimePointElem(time) {
   return elem;
 }
 
+class TimeLineElem {
+
+  elem = document.createElement('timeline-line');
+
+  constructor(topCoord, bottomCoord) {
+    this.elem.style.top = `${topCoord}px`;
+    this.elem.style.height = `${bottomCoord - topCoord}px`;
+  }
+}
+
 function TimeSpanElem(span) {
   // create span and the line
   let elem = document.createElement('timeline-timespan');
@@ -136,7 +146,8 @@ function TimeSpanElem(span) {
 
   function update() {
     // fill the span with temp content
-    card.innerHTML = `${span}`;
+    card.innerHTML = `<p>${span.delta} secs:</p>`
+      + span.tags.map((t) => `<p>${t}</p>`).join("");
   }
 
   // init cardview
@@ -144,7 +155,8 @@ function TimeSpanElem(span) {
 
   // set heights based on time difference
   // the value is temporarily exaggerated for testing
-  card.style.height = `${30 + 10*span.delta}px`;
+  // card.style.height = `${30 + 10*span.delta}px`;
+  card.style.marginBottom = `${10*span.delta}px`;
   line.style.height = `${100 + 10*span.delta}px`;
 
   card.onclick = function() {
@@ -169,7 +181,7 @@ function TimeSpanElem(span) {
 
 // main =======================================================================
 
-timelineApp = function () {
+timelineApp = function TimelineApp() {
 
   function markTime(){
     currTimeline.addMark();
@@ -191,7 +203,7 @@ timelineApp = function () {
   };
 
   function updateScreen() {
-    appElem.textContent = "";
+    appElem.innerHTML = "";
 
     appElem.appendChild(markButton.elem);
     appElem.appendChild(endButton.elem);
@@ -200,13 +212,20 @@ timelineApp = function () {
   };
 
   function decorateMainElement() {
+    let elemArr = [];
     for (var mark of currTimeline.markArr) {
       if (mark.type === 'TimePoint') {
-        appElem.appendChild(new TimePointElem(mark));
+        var elem = new TimePointElem(mark);
       } else if (mark.type === 'TimeSpan') {
-        appElem.appendChild(new TimeSpanElem(mark));
+        var elem = new TimeSpanElem(mark, () => updateScreen());
       }
+      appElem.appendChild(elem);
+      elemArr.push(elem);
     }
+
+    appElem.appendChild(new TimeLineElem(
+      elemArr.at(0).getBoundingClientRect().top,
+      elemArr.at(-1).getBoundingClientRect().bottom).elem);
   }
 
   // init code
@@ -226,4 +245,8 @@ timelineApp = function () {
   let appElem = document.getElementsByTagName("timeline-app")[0];
   updateScreen();
   // end init
+
+  return {
+    update: updateScreen,
+  };
 }();

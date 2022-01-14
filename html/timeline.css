@@ -45,13 +45,13 @@ timeline-timespan > card {
     box-shadow: 0 0 2px black;
 }
 
-timeline-timespan > line {
+timeline-line {
     content: "";
     width: 20px;
-    height: 100px;
+    /* height: 100px; */
     position: absolute;
     left: 30px;
-    margin-top: -32px;
+    /* margin-top: -32px; */
     display: inline-block;
     background: #1d3c45;
     z-index: -1;

@@ -81,6 +81,25 @@ Topics to study further:
         - Check out [3][4].
 
 
+|--[ 05 - actual steps to success ]---------------------------------------------|
+
+1. Create data structures and logic in base classes.
+2. Create a main class to initialize the app
+3. Design css layout
+4. Design element css
+
+
+|--[ 06 - bugs and improvements ]-----------------------------------------------|
+
+- [BUG] fix dynamic line
+    - the line does not update with new tags, so it becomes relatively shorter
+      and shorter.
+
+- [BUG] fix decoration
+    - currently I'm building the UI from scratch with every car addition. This
+      is not efficient and generally error-prone.
+
+
 |--[ 0A - references ]----------------------------------------------------------|
 
 [1] https://github.com/vipulasri/Timeline-View
