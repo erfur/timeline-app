@@ -38,6 +38,7 @@ class TimeSpan {
     this.id = id;
     this.startPoint = start;
     this.endPoint = end;
+    this.tags = [];
   }
 
   get delta() {
@@ -45,8 +46,13 @@ class TimeSpan {
   }
 
   toString() {
-    return `${this.startPoint}-${this.endPoint}`;
+    return `${this.delta}: ${this.tags}`;
   }
+
+  addTag(t) {
+    this.tags.push(t);
+  }
+
 };
 
 class Timeline {
@@ -96,13 +102,16 @@ class Timeline {
 
 // UI =========================================================================
 
-function TimelineButton(name, fcn) {
-  this.elem = document.createElement('timeline-button');
-  this.elem.innerHTML = name;
-  this.elem.className = name;
-  this.elem.onclick = fcn;
+class TimelineButton {
 
-  return this.elem;
+  elem = document.createElement('timeline-button');
+
+  constructor(name, fcn) {
+    this.elem.innerHTML = name;
+    this.elem.className = name;
+    this.elem.onclick = fcn;
+  }
+
 }
 
 function TimePointElem(time) {
@@ -125,8 +134,13 @@ function TimeSpanElem(span) {
   let line = document.createElement('line');
   let isButtonsActive = false;
 
-  // fill the span with temp content
-  card.innerHTML = `${span.delta.toString()} secs`;
+  function update() {
+    // fill the span with temp content
+    card.innerHTML = `${span}`;
+  }
+
+  // init cardview
+  update();
 
   // set heights based on time difference
   // the value is temporarily exaggerated for testing
@@ -135,8 +149,11 @@ function TimeSpanElem(span) {
 
   card.onclick = function() {
     if (isButtonsActive === false) {
-      let addTagButton = new TimelineButton('addTag', function (){});
-      elem.appendChild(addTagButton);
+      let addTagButton = new TimelineButton('addTag', function(){
+        span.addTag('test');
+        update();
+      });
+      elem.appendChild(addTagButton.elem);
       isButtonsActive = true;
     } else {
       elem.removeChild(elem.lastElementChild);
@@ -176,9 +193,9 @@ timelineApp = function () {
   function updateScreen() {
     appElem.textContent = "";
 
-    appElem.appendChild(markButton);
-    appElem.appendChild(endButton);
-    appElem.appendChild(clearButton);
+    appElem.appendChild(markButton.elem);
+    appElem.appendChild(endButton.elem);
+    appElem.appendChild(clearButton.elem);
     decorateMainElement();
   };
 
