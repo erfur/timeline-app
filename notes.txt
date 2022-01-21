@@ -77,27 +77,38 @@ to try.
 Topics to study further:
     - Singleton vs Module pattern
     - ES6
+        - ES6 classes are primitive at best. But somehow they're more common
+          than other approaches.
     - design patterns
         - Check out [3][4].
 
 
 |--[ 05 - actual steps to success ]---------------------------------------------|
 
-1. Create data structures and logic in base classes.
-2. Create a main class to initialize the app
-3. Design css layout
-4. Design element css
+1. Create data structures and logic in base classes. [DONE]
+    - having text-only output makes it easier to focus on just logic.
+2. Create a main class to initialize the app [DONE]
+3. Design css layout [DONE]
+4. Design element css [DONE]
 
 
 |--[ 06 - bugs and improvements ]-----------------------------------------------|
 
-- [BUG] fix dynamic line
+- [BUG][SOLVED] fix dynamic line
     - the line does not update with new tags, so it becomes relatively shorter
       and shorter.
 
-- [BUG] fix decoration
-    - currently I'm building the UI from scratch with every car addition. This
+- [BUG][SOLVED] fix decoration
+    - currently I'm building the UI from scratch with every card addition. This
       is not efficient and generally error-prone.
+
+- [TODO][DONE] add json export as file
+- [TODO][DONE] add proper day handling
+- [TODO] let the end button actually end the day
+- [TODO] add version and license
+- [TODO] comment the damn code
+- [TODO] draw a class diagram for future reference
+- [TODO] add simple css animations for buttons
 
 
 |--[ 07 - misc notes ]----------------------------------------------------------|

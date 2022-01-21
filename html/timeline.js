@@ -19,6 +19,10 @@ class TimePoint {
     return this.date.getMinutes();
   }
 
+  get epochMinutes() {
+    return Math.trunc(this.date.getTime() / (1000 * 60));
+  }
+
   get epoch() {
     return Math.trunc(this.date.getTime() / 1000);
   }
@@ -50,7 +54,7 @@ class TimeSpan {
   }
 
   get delta() {
-    return this.endPoint.epoch - this.startPoint.epoch;
+    return this.endPoint.epochMinutes - this.startPoint.epochMinutes;
   }
 
   addTag(t) {
@@ -74,8 +78,8 @@ class TimeSpan {
 };
 
 class Timeline {
-
-  constructor(markArr = [], currid = 0) {
+  constructor(markArr = [], currid = 0, date = new Date()) {
+    this.creationDate = date;
     this.markArr = markArr;
     this.currid = currid;
   }
@@ -88,13 +92,24 @@ class Timeline {
     return this.markArr.at(-1);
   }
 
+  formatDate() {
+    const t = new Date();
+    const date = ("0" + t.getDate()).slice(-2);
+    const month = ("0" + (t.getMonth() + 1)).slice(-2);
+    const year = t.getFullYear();
+    return `${date}/${month}/${year}`;
+  }
+
+  get date() {
+    return this.formatDate(this.creationDate);
+  }
+
   newId() {
     this.currId += 1;
     return this.currId;
   }
 
-  addMark(sleepTime=false) {
-
+  addMark(sleepTime = false) {
     var m = new TimePoint(new Date(), this.newId());
 
     // First mark is the wakeup time
@@ -117,20 +132,17 @@ class Timeline {
     return [s, m];
   }
 
-  toString() {
-    return `${this.markArr}`;
-  }
-
   toJSON() {
     return {
-      $type: 'Timeline',
+      $type: "Timeline",
       markArr: this.markArr,
       currid: this.currid,
+      date: this.date,
     };
   }
 
   static fromJson(data) {
-    return new Timeline(data.markArr, data.currid);
+    return new Timeline(data.markArr, data.currid, data.date);
   }
 };
 
@@ -142,7 +154,7 @@ class TimelineStorage {
     // this.currentTimeline = this.timelineHistory.at(-1);
 
     this.timelineHistory = this.persistentHistory;
-    this.currentTimeline = this.timelineHistory;
+    this.currentTimeline = this.timelineHistory.at(-1);
   }
 
   set persistentHistory(hist) {
@@ -151,14 +163,15 @@ class TimelineStorage {
 
   get persistentHistory() {
     if (window.localStorage.timelineHistory === undefined) {
-      this.initHistory();
+      this.clearHistory();
       this.saveHistory();
+      return this.timelineHistory;
     }
 
     return JSON.parse(window.localStorage.timelineHistory, (k, v) => this.reviver(k, v));
   }
 
-  reviver(key, value) {
+  reviver(_, value) {
     if (value && value.$type === 'Timeline') {
       return Timeline.fromJson(value);
     } else if (value && value.$type === 'TimePoint') {
@@ -170,12 +183,23 @@ class TimelineStorage {
     }
   }
 
-  initHistory() {
-    this.timelineHistory = new Timeline();
+  clearHistory() {
+    this.timelineHistory = [];
+    this.newTimeline();
   };
 
   saveHistory() {
     this.persistentHistory = this.timelineHistory;
+  }
+
+  exportJSON() {
+    return JSON.stringify(this.timelineHistory);
+  }
+
+  newTimeline() {
+    let timeline = new Timeline();
+    this.timelineHistory.push(timeline);
+    this.currentTimeline = timeline;
   }
 }
 
@@ -272,9 +296,12 @@ class TimeSpanElem {
   cardOnclick() {
     if (this.isButtonsActive === false) {
       let addTagButton = new TimelineButton('addTag', () => {
-        this.span.addTag(`${window.prompt('Enter tag: ')}`);
-        this.update();
-        this.mainUpdate();
+        var tag;
+        if (tag = window.prompt('Enter tag: ')) {
+          this.span.addTag(tag);
+          this.update();
+          this.mainUpdate();
+        }
       });
       this.elem.appendChild(addTagButton.elem);
       this.isButtonsActive = true;
@@ -286,7 +313,7 @@ class TimeSpanElem {
 
   update() {
     // fill the span with temp content
-    this.card.innerHTML = `<p>${this.span.delta} secs:</p>`
+    this.card.innerHTML = `<p>${this.span.delta} mins</p>`
       + this.span.tags.map((t) => `<p>${t}</p>`).join("");
   }
 
@@ -403,15 +430,31 @@ class TimelineAppView {
     // no need to use dict for these buttons
     this.viewElements.mainButtons = [];
 
+    this.viewElements.mainButtons.
+    push(new TimelineButton(this.storage.currentTimeline.date, function (){}));
+    this.viewElements.mainButtons.push(new TimelineButton("New", () => this.storage.newTimeline()));
     this.viewElements.mainButtons.push(new TimelineButton("Mark", () => this.mainView.addMark()));
     this.viewElements.mainButtons.push(new TimelineButton("End", () => this.mainView.addMark(true)));
-    this.viewElements.mainButtons.push(new TimelineButton("Clear", () => this.storage.initHistory()));
+    this.viewElements.mainButtons.push(new TimelineButton("Clear", () => this.storage.clearHistory()));
     this.viewElements.mainButtons.push(new TimelineButton("Save", () => this.storage.saveHistory()));
+    this.viewElements.mainButtons.push(new TimelineButton("Export", () => this.exportFile()));
 
     // this access is tricky in js
     for (var button of this.viewElements.mainButtons) {
       button.appendTo(this.buttonsElem);
     }
+  }
+
+  exportFile() {
+    let content = "data:application/json;charset=utf-8," + this.storage.exportJSON();
+
+    let exportFileDefaultName = 'timeline-export.json';
+
+    let linkElement = document.createElement('a');
+    linkElement.setAttribute('href', encodeURI(content));
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+    linkElement.remove();
   }
 
 }
@@ -423,4 +466,4 @@ class TimelineApp {
   viewModel = new TimelineAppView(this.storage);
 }
 
-timelineApp = new TimelineApp();
+const timelineApp = new TimelineApp();
