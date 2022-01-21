@@ -1,14 +1,12 @@
 // logic ======================================================================
 
-// these three base classes should be serializable
+
 class TimePoint {
 
   type = 'TimePoint';
 
-  constructor(date = new Date(), wakeupTime = false, sleepTime = false) {
+  constructor(date = new Date()) {
     this.date = date;
-    this.wakeupTime = wakeupTime;
-    this.sleepTime = sleepTime;
   }
 
   get hours() {
@@ -31,13 +29,11 @@ class TimePoint {
     return {
       $type: this.type,
       date: this.date.toString(),
-      wakeupTime: this.wakeupTime,
-      sleepTime: this.sleepTime,
     };
   }
 
   static fromJson(data) {
-    return new TimePoint(new Date(data.date), data.wakeupTime, data.sleepTime);
+    return new TimePoint(new Date(data.date));
   }
 
 };
@@ -88,6 +84,10 @@ class Timeline {
     return this.markArr.length == 0;
   }
 
+  get firstPoint() {
+    return this.markArr.at(0);
+  }
+
   get lastPoint() {
     return this.markArr.at(-1);
   }
@@ -109,18 +109,13 @@ class Timeline {
     return this.currId;
   }
 
-  addMark(sleepTime = false) {
+  addMark() {
     var m = new TimePoint(new Date(), this.newId());
 
     // First mark is the wakeup time
     if (this.isFirstMark) {
-      m.wakeupTime = true;
       this.markArr.push(m);
       return [m];
-    }
-
-    if (sleepTime) {
-      m.sleepTime = true;
     }
 
     var pm = this.lastPoint;
@@ -227,11 +222,21 @@ class TimePointElem {
   constructor(time) {
     this.elem.innerHTML = `${time.hours.toString().padStart(2, '0')}`
                           + `:${time.minutes.toString().padStart(2, '0')}`;
+  }
 
-    if (time.wakeupTime) {
+  set wakeup(b) {
+    if (b) {
       this.elem.className = "wakeup";
-    } else if (time.sleepTime) {
+    } else {
+      this.elem.className = '';
+    }
+  }
+
+  set sleep(b) {
+    if (b) {
       this.elem.className = "sleep";
+    } else {
+      this.elem.className = '';
     }
   }
 
@@ -369,8 +374,8 @@ class TimelineMainView {
     this.timeLineView.update();
   }
 
-  addMark(sleepTime=false) {
-    var newData = this.storage.currentTimeline.addMark(sleepTime);
+  addMark() {
+    var newData = this.storage.currentTimeline.addMark();
     for (var data of newData) {
       if (data.type === 'TimePoint') {
         this.addTimePoint(data);
@@ -434,7 +439,6 @@ class TimelineAppView {
     push(new TimelineButton(this.storage.currentTimeline.date, function (){}));
     this.viewElements.mainButtons.push(new TimelineButton("New", () => this.storage.newTimeline()));
     this.viewElements.mainButtons.push(new TimelineButton("Mark", () => this.mainView.addMark()));
-    this.viewElements.mainButtons.push(new TimelineButton("End", () => this.mainView.addMark(true)));
     this.viewElements.mainButtons.push(new TimelineButton("Clear", () => this.storage.clearHistory()));
     this.viewElements.mainButtons.push(new TimelineButton("Save", () => this.storage.saveHistory()));
     this.viewElements.mainButtons.push(new TimelineButton("Export", () => this.exportFile()));
