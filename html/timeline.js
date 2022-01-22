@@ -331,6 +331,15 @@ class TimelineButton {
 
     this.buttonView.elem.appendChild(this.elem);
   }
+
+  toggleVisible() {
+    if (this.elem.style.display === 'none') {
+      this.elem.style = this.displayValue;
+    } else {
+      this.displayValue = this.elem.style.display;
+      this.elem.style.display = 'none';
+    }
+  }
 }
 
 /**
@@ -427,11 +436,6 @@ class TimeSpanElem {
   card = document.createElement('card');
 
   /**
-   * Used to keep track of toggled buttons.
-   */
-  isButtonsActive = false;
-
-  /**
    * Create a new TimeSpanElem.
    * @param {TimelineMainView} parentView
    * @param {TimeSpan} span - The underlying time span.
@@ -455,27 +459,32 @@ class TimeSpanElem {
     this.elem.appendChild(this.card);
 
     parentView.elem.appendChild(this.elem);
+
+    // add buttons to the card
+    this.addButtons();
   }
 
   /**
-   * Callback method for card.onclick.
+   * Add necessary buttons to the card.
    */
-  cardOnclick() {
-    if (this.isButtonsActive === false) {
-      let addTagButton = new TimelineButton(this, 'addTag', () => {
+  addButtons() {
+    this.addTagButton = new TimelineButton(this, 'addTag', () => {
         var tag;
         if (tag = window.prompt('Enter tag: ')) {
           this.span.addTag(tag);
           this.update();
           this.mainUpdate();
         }
-      });
-      this.isButtonsActive = true;
-    } else {
-      // TODO this is not practical.
-      this.elem.removeChild(this.elem.lastElementChild);
-      this.isButtonsActive = false;
-    }
+    });
+
+    this.addTagButton.toggleVisible();
+  }
+
+  /**
+   * Callback method for card.onclick.
+   */
+  cardOnclick() {
+    this.addTagButton.toggleVisible();
   }
 
   /**
