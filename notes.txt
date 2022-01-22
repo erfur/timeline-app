@@ -111,12 +111,20 @@ Topics to study further:
 - [TODO] add simple css animations for buttons
 
 
-|--[ 07 - misc notes ]----------------------------------------------------------|
+|--[ 07 - Porting the code onto a framework ]-----------------------------------|
+
+The app is usable at this stage, so it is time to include a framework, transform
+the code and make a usable mobile app out of it. After some research, my choice
+of framework is Vue.js.
+
+
+|--[ 0A - misc notes ]----------------------------------------------------------|
 
 - android webview app building
+- alternatives to jquery?
 
 
-|--[ 0A - references ]----------------------------------------------------------|
+|--[ 0B - references ]----------------------------------------------------------|
 
 [1] https://github.com/vipulasri/Timeline-View
 [2] https://www.khanacademy.org/computing/computer-programming
