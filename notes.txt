@@ -104,9 +104,9 @@ Topics to study further:
 
 - [TODO][DONE] add json export as file
 - [TODO][DONE] add proper day handling
-- [TODO] let the end button actually end the day
+- [TODO][DROPPED] let the end button actually end the day
 - [TODO] add version and license
-- [TODO] comment the damn code
+- [TODO][DONE] comment the damn code
 - [TODO] draw a class diagram for future reference
 - [TODO] add simple css animations for buttons
 
