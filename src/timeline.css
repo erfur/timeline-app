@@ -28,7 +28,7 @@ timeline-timespan {
     width: 100%;
 }
 
-timeline-timespan > card {
+timeline-app > div > ol > li {
     display : inline-block;
     background-color : #d2601a;
     color : #fff1e1;
@@ -39,7 +39,7 @@ timeline-timespan > card {
     /* left: 10px; */
     padding : 15px;
     /* padding-left: 64px; */
-    width : 40%;
+    width : 100%;
     font-family : Arial, Helvetica, sans-serif;
     margin-left: 40px;
     box-shadow: 0 0 2px black;

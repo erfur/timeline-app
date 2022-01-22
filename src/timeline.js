@@ -66,6 +66,10 @@ class TimePoint {
   static fromJson(data) {
     return new TimePoint(new Date(data.date));
   }
+
+  toString() {
+    return `${this.date.getHours().toString()}:${this.date.getMinutes().toString()}`
+  }
 };
 
 /**
@@ -124,6 +128,10 @@ class TimeSpan {
    */
   static fromJson(data) {
     return new TimeSpan(data.startPoint, data.endPoint, data.tags);
+  }
+
+  toString() {
+    return `${this.delta} mins`
   }
 
 };
@@ -654,20 +662,12 @@ class TimelineAppView {
 
 // main =======================================================================
 
-/**
- * Represents the Timeline App.
- */
-class TimelineApp {
+const storage = new TimelineStorage();
 
-  /**
-   * Data storage of the app.
-   */
-  storage = new TimelineStorage()
-
-  /**
-   * ViewModel of the app.
-   */
-  viewModel = new TimelineAppView(this.storage);
+const TimelineApp = {
+  data() {
+    return {
+      marks: storage.currentTimeline.markArr,
+    }
+  }
 }
-
-const timelineApp = new TimelineApp();
