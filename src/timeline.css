@@ -28,8 +28,8 @@ timeline-timespan {
     width: 100%;
 }
 
-timeline-app > div > ol > li {
-    display : inline-block;
+timeline-view > ol > li {
+    display : block;
     background-color : #d2601a;
     color : #fff1e1;
     border : 2px solid #a04812;
@@ -39,7 +39,7 @@ timeline-app > div > ol > li {
     /* left: 10px; */
     padding : 15px;
     /* padding-left: 64px; */
-    width : 100%;
+    width : 30%;
     font-family : Arial, Helvetica, sans-serif;
     margin-left: 40px;
     box-shadow: 0 0 2px black;
@@ -58,7 +58,7 @@ timeline-line {
     box-shadow: 0 0 5px black;
 }
 
-timeline-button {
+timeline-nav > a {
     background-color : #d2601a;
     color : #fff1e1;
     border : 2px solid #a04812;
@@ -80,7 +80,7 @@ timeline-button.addTag {
     width: 20%;
 }
 
-timeline-buttons {
+timeline-nav {
     display: block;
     position: fixed;
     left: 640px;

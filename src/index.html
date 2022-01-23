@@ -3,20 +3,20 @@
 <html>
     <head></head>
     <body>
-        <timeline-app>
-            <div id="timeline">
+        <div id="timeline-app">
+            <timeline-nav>
+                <a v-on:click="addMark">Mark</a>
+            </timeline-nav>
+            <timeline-view>
                 <ol>
-                    <li v-for="mark in marks">
-                        {{ mark }}
-                    </li>
+                    <li is="timeline-mark"
+                        v-for="mark in marks"
+                        >{{ mark }}</li>
                 </ol>
-            </div>
-        </timeline-app>
+            </timeline-view>
+        </div>
         <link rel="stylesheet" type="text/css" href="timeline.css"></style>
-        <script src="https://unpkg.com/vue@next"></script>
+        <script src="vue.js"></script>
         <script src="timeline.js"></script>
-        <script>
-            Vue.createApp(TimelineApp).mount('#timeline')
-        </script>
     </body>
 </html>

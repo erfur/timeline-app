@@ -662,12 +662,41 @@ class TimelineAppView {
 
 // main =======================================================================
 
-const storage = new TimelineStorage();
 
-const TimelineApp = {
-  data() {
-    return {
-      marks: storage.currentTimeline.markArr,
+// const TimelineMark = {
+//   props: ['mark'],
+//   template: `<li>{{ mark }}</li>`
+// }
+
+const TimelineApp = (function () {
+  storage = new TimelineStorage();
+
+  return {
+    data() {
+      return {
+        // required for vue update triggers
+        storage: storage,
+        marks: storage.currentTimeline.markArr,
+      }
+    },
+    methods: {
+      addMark: function () {
+        console.log('Clicked addMark');
+        console.log(storage.currentTimeline.markArr);
+        this.storage.currentTimeline.addMark();
+        // this.marks.push(new TimePoint());
+      }
+    },
+    // components: {
+    //   TimelineMark,
+    // },
+    created() {
+      console.log(`Count of current marks: ${storage.currentTimeline.markArr.length}`);
+    },
+    updated() {
+      console.log(`Count of current marks: ${storage.currentTimeline.markArr.length}`);
     }
-  }
-}
+  };
+})();
+
+const vm = Vue.createApp(TimelineApp).mount('#timeline-app')
