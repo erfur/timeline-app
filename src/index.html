@@ -4,16 +4,30 @@
     <head></head>
     <body>
         <div id="timeline-app">
-            <timeline-nav>
-                <a v-on:click="addMark">Mark</a>
-            </timeline-nav>
-            <timeline-view>
-                <ol>
-                    <li is="timeline-mark"
-                        v-for="mark in marks"
-                        >{{ mark }}</li>
+            <div id="timeline-nav">
+                <a>{{ storage.currentTimeline.date }}</a>
+                <a @click="newTimeline">New</a>
+                <a @click="addMark">Mark</a>
+                <a @click="saveHistory">Save</a>
+                <a @click="clearHistory">Clear</a>
+                <a @click="exportFile">Export</a>
+                <a @click="addTag">Add Tag</a>
+            </div>
+            <div id="timeline-view">
+                <ol ref="timelineList">
+                    <li v-for="mark in storage.currentTimeline.markArr"
+                        :class="mark.type"
+                        @click="selectMark(mark)"
+                        ><div>{{ mark }}</div>
+                        <ol id="timeline-tags">
+                            <li v-for="tag in mark.tags">
+                                {{ tag }}
+                            </li>
+                        </ol>
+                    </li>
                 </ol>
-            </timeline-view>
+                <div id="timeline-line" ref="timelineLine"></div>
+            </div>
         </div>
         <link rel="stylesheet" type="text/css" href="timeline.css"></style>
         <script src="vue.js"></script>

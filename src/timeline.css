@@ -1,4 +1,4 @@
-timeline-timepoint {
+.TimePoint {
     display: block;
     background-color: #d2601a;
     color : #fff1e1;
@@ -13,22 +13,7 @@ timeline-timepoint {
     box-shadow: 0 0 2px black;
 }
 
-timeline-timepoint.wakeup::after {
-    content: "☼";
-    display: inline-block;
-}
-
-timeline-timepoint.sleep::after {
-    content: "⏾";
-    display: inline-block;
-}
-
-timeline-timespan {
-    display: inline-flex;
-    width: 100%;
-}
-
-timeline-view > ol > li {
+.TimeSpan {
     display : block;
     background-color : #d2601a;
     color : #fff1e1;
@@ -45,20 +30,27 @@ timeline-view > ol > li {
     box-shadow: 0 0 2px black;
 }
 
-timeline-line {
+#timeline-line {
     content: "";
     width: 20px;
-    /* height: 100px; */
-    position: absolute;
-    left: 30px;
-    /* margin-top: -32px; */
-    display: inline-block;
+    left: 75px;
     background: #1d3c45;
     z-index: -1;
     box-shadow: 0 0 5px black;
+    position: absolute;
 }
 
-timeline-nav > a {
+/* #timeline-view { */
+/*     display: flex; */
+/*     width: 100%; */
+/* } */
+
+/* #timeline-view>ol { */
+/*     width: 100%; */
+/*     flex: 1; */
+/* } */
+
+#timeline-nav > a {
     background-color : #d2601a;
     color : #fff1e1;
     border : 2px solid #a04812;
@@ -75,22 +67,26 @@ timeline-nav > a {
     box-shadow: 0 0 2px black;
 }
 
+#timeline-tags {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
 timeline-button.addTag {
     display: inline-block;
     width: 20%;
 }
 
-timeline-nav {
+#timeline-nav {
     display: block;
     position: fixed;
-    left: 640px;
+    top: 5%;
+    right: 15%;
 }
 
-/* timeline-main {
-    display: inline-flex;
-} */
-
-timeline-app {
-    width: 640px;
-    display: inline-block;
+#timeline-app {
+    top: 4%;
+    width: 100%;
+    /* position: fixed; */
 }
