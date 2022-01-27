@@ -7,7 +7,7 @@
 <body>
     <div id="timeline-app">
         <div id="timeline-nav">
-            <a>{{ storage.currentTimeline.date }}</a>
+            <a id="timeline-date">{{ storage.currentTimeline.date }}</a>
             <a @click="newTimeline">New</a>
             <a @click="addMark">Mark</a>
             <a @click="saveHistory">Save</a>
