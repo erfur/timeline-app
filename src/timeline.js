@@ -68,7 +68,8 @@ class TimePoint {
   }
 
   toString() {
-    return `${this.date.getHours().toString()}:${this.date.getMinutes().toString()}`
+    let rjust = (t) => ("0" + t).slice(-2);
+    return `${rjust(this.date.getHours().toString())}:${rjust(this.date.getMinutes().toString())}`
   }
 };
 
@@ -330,8 +331,8 @@ const TimelineApp = (function () {
   return {
     data() {
       return {
-        // required for vue update triggers
         storage: storage,
+        currentTag: '',
       }
     },
     methods: {
@@ -350,15 +351,28 @@ const TimelineApp = (function () {
       exportFile: function () {
         exportFile(this.storage.exportJSON(), this.storage.currentTimeline.date.toString())
       },
-      selectMark: function(mark) {
+      selectMark: function(mark, event) {
         this.activeMark = mark;
+        if (this.activeElement) {
+          this.removeClass(this.activeElement, 'active');
+        }
+        this.activeElement = event.target;
+        this.addClass(this.activeElement, 'active');
+      },
+      addClass: function(el, cname) {
+        el.classList.add(cname);
+      },
+      removeClass: function(el, cname) {
+        el.classList.remove(cname);
       },
       addTag: function() {
-        this.activeMark.addTag('test');
+        if (this.currentTag) {
+          this.activeMark.addTag(this.currentTag);
+        }
       },
       updateLine() {
-        this.$refs.timelineLine.style.top = `${this.$refs.timelineList.offsetTop}px`
-        this.$refs.timelineLine.style.height = `${this.$refs.timelineList.clientHeight}px`;
+        this.$refs.timelineLine.style.top = `${this.$refs.timelineList.offsetTop + 10}px`
+        this.$refs.timelineLine.style.height = `${this.$refs.timelineList.clientHeight - 20}px`;
       }
     },
     updated() {

@@ -40,6 +40,18 @@
     position: absolute;
 }
 
+#timeline-view .active {
+    background-color: #d39975;
+}
+
+.TimeSpan * {
+    pointer-events: none;
+}
+
+.TimePoint {
+    pointer-events: none;
+}
+
 /* #timeline-view { */
 /*     display: flex; */
 /*     width: 100%; */
@@ -67,7 +79,24 @@
     box-shadow: 0 0 2px black;
 }
 
-#timeline-tags {
+#timeline-nav > input {
+    background-color : #d2601a;
+    color : #fff1e1;
+    border : 2px solid #a04812;
+    display : block;
+    font-size : 24px;
+    text-align : center;
+    text-decoration : none;
+    padding : 15px 32px;
+    width : 100%;
+    height: 30px;
+    font-family : Arial, Helvetica, sans-serif;
+    cursor : pointer;
+    user-select : none;
+    box-shadow: 0 0 2px black;
+}
+
+.timeline-tags {
     list-style-type: none;
     margin: 0;
     padding: 0;
