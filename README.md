@@ -1,24 +1,48 @@
 # timeline-app
 
-## Project setup
-```
-npm install
+A simple timeline journal built with vue.js and cordova.
+
+Mark time points to create a timespan between, then add information about the
+timespans as tags.
+
+![](img/mobile-latest.png)
+
+## Install and Build
+
+If vue and cordova aren't installed:
+
+```sh
+$ npm install -g @vue/cli
+$ npm install -g cordova
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+Add cordova plugin:
+
+```sh
+$ vue add cordova
 ```
 
-### Compiles and minifies for production
-```
-npm run build
+Prepare the project:
+
+```sh
+$ npm run cordova-prepare # prepare for build (you can run this command, when you checkouted your project from GIT, it's like npm install) 
 ```
 
-### Lints and fixes files
-```
-npm run lint
+For Android:
+
+```sh
+$ npm run cordova-serve-android # Development Android 
+$ npm run cordova-build-android # Build Android 
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Test on browser:
+
+```sh
+$ npm run cordova-serve-browser # Development Browser 
+```
+
+## Screenshots
+
+First run on mobile:
+
+![](img/mobile-first.png)

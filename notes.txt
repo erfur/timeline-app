@@ -142,7 +142,7 @@ like "v-bind" and ":ref". They took a big trial-and-error time to figure out.
 
 - android webview app building
 - alternatives to jquery?
-- can debug android app with chrome remote inpection (black magic?)
+- can debug android app with chrome remote inpection [5](black magic?)
 
 
 |--[ 0B - references ]----------------------------------------------------------|
@@ -151,3 +151,4 @@ like "v-bind" and ":ref". They took a big trial-and-error time to figure out.
 [2] https://www.khanacademy.org/computing/computer-programming
 [3] https://www.digitalocean.com/community/tutorial_series/javascript-design-patterns
 [4] https://www.w3.org/wiki/JavaScript_best_practices
+[5] https://developer.chrome.com/docs/devtools/remote-debugging/
