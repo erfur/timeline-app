@@ -33,12 +33,12 @@ close by anyway.
 I plan on using the app on an Android phone and maybe as a web service in the
 long run. My initial requirements are as follows:
 
-    - visualize the time spent on different tasks
-    - visualize the time spent awake in a day
-    - mark a point in time
-    - be able to tag a timeframe between two marks
-    - leave detailed note for a timeframe aside from a tag
-    - visualize the time of waking up and going to sleep
+  - visualize the time spent on different tasks
+  - visualize the time spent awake in a day
+  - mark a point in time
+  - be able to tag a timeframe between two marks
+  - leave detailed note for a timeframe aside from a tag
+  - visualize the time of waking up and going to sleep
 
 The data that's built up in a day should be accessible later on. This requires a
 database. Judging from the type of data that will be saved, a nosql database
@@ -54,18 +54,18 @@ to try.
 |--[ 03 - initial steps ]------------------------------------------------------|
 
 1. Choose a framework to base the app on
-    - Initially I tried to go with the TimelineView project [1] that is written
-      in Kotlin. That proved to be difficult without the technical knowledge of
-      android app development. Then I switched to getting the concept working as
-      a web application. I will probably be using Vue.js to develop a prototype,
-      however I think I should get a basic web development course first not to
-      get bogged down in basics. [2] seems like a decent course.
+  - Initially I tried to go with the TimelineView project [1] that is written
+    in Kotlin. That proved to be difficult without the technical knowledge of
+    android app development. Then I switched to getting the concept working as
+    a web application. I will probably be using Vue.js to develop a prototype,
+    however I think I should get a basic web development course first not to
+    get bogged down in basics. [2] seems like a decent course.
 
 2. Experiment with graphics
-    - CSS seems promising for prototyping this kind of a ui.
+  - CSS seems promising for prototyping this kind of a ui.
 
 3. Design the data structure
-    - After a little experimentation, its obvious that the data model should be
+  - After a little experimentation, its obvious that the data model should be
       designed first, not after the ui is created. Also it's way easier to work
       with text output while trying to figure out the business logic.
 
@@ -75,18 +75,18 @@ to try.
 |--[ 04 - learning proper JS ]--------------------------------------------------|
 
 Topics to study further:
-    - Singleton vs Module pattern
-    - ES6
-        - ES6 classes are primitive at best. But somehow they're more common
-          than other approaches.
-    - design patterns
-        - Check out [3][4].
+  - Singleton vs Module pattern
+  - ES6
+    - ES6 classes are primitive at best. But somehow they're more common
+        than other approaches.
+  - design patterns
+    - Check out [3][4].
 
 
 |--[ 05 - actual steps to success ]---------------------------------------------|
 
 1. Create data structures and logic in base classes. [DONE]
-    - having text-only output makes it easier to focus on just logic.
+  - having text-only output makes it easier to focus on just logic.
 2. Create a main class to initialize the app [DONE]
 3. Design css layout [DONE]
 4. Design element css [DONE]
@@ -94,21 +94,26 @@ Topics to study further:
 
 |--[ 06 - bugs and improvements ]-----------------------------------------------|
 
-- [BUG][SOLVED] fix dynamic line
-    - the line does not update with new tags, so it becomes relatively shorter
+- [BUG][x] fix dynamic line
+  - the line does not update with new tags, so it becomes relatively shorter
       and shorter.
 
-- [BUG][SOLVED] fix decoration
-    - currently I'm building the UI from scratch with every card addition. This
-      is not efficient and generally error-prone.
+- [BUG][x] fix decoration
+  - currently I'm building the UI from scratch with every card addition. This
+    is not efficient and generally error-prone.
 
-- [TODO][DONE] add json export as file
-- [TODO][DONE] add proper day handling
-- [TODO][DROPPED] let the end button actually end the day
-- [TODO] add version and license
-- [TODO][DONE] comment the damn code
-- [TODO] draw a class diagram for future reference
-- [TODO] add simple css animations for buttons
+Improvements:
+  [x] add json export as file
+  [x] add proper day handling
+  [-] let the end button actually end the day
+  [x] add version and license
+  [x] comment the damn code
+  [-] draw a class diagram for future reference
+  [x] add simple css animations for buttons
+
+Mobile version:
+  [x] export json to downloads
+  [x] save timeline on background
 
 
 |--[ 07 - Porting the code onto a framework ]-----------------------------------|
@@ -117,11 +122,27 @@ The app is usable at this stage, so it is time to include a framework, transform
 the code and make a usable mobile app out of it. After some research, my choice
 of framework is Vue.js.
 
+Vue.js takes care of the View Model part of my MVVM architecture. It takes good
+care of the two-way interactions between the View and the Model. Since I've
+already written the app in pure js and built it on top of native DOM, I had the
+data structure and the logic ready. The vue.js porting took more code deletion
+than addition to complete, so it was a relaxing process for the most part.
+
+Most of the on-click functions were stripped down to one line. Vue successfully
+wrapped my storage class thus the updates were detected and the views were
+updated automatically. I initially had problems with this when I defined the
+inner objects as data, giving the outermost object directly (somehow) solved all
+the issues.
+
+I had a pretty hard time understanding the arguments given to the html elements
+like "v-bind" and ":ref". They took a big trial-and-error time to figure out.
+
 
 |--[ 0A - misc notes ]----------------------------------------------------------|
 
 - android webview app building
 - alternatives to jquery?
+- can debug android app with chrome remote inpection (black magic?)
 
 
 |--[ 0B - references ]----------------------------------------------------------|

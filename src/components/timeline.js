@@ -71,7 +71,7 @@ class TimePoint {
     let rjust = (t) => ("0" + t).slice(-2);
     return `${rjust(this.date.getHours().toString())}:${rjust(this.date.getMinutes().toString())}`
   }
-};
+}
 
 /**
  * Represents the span between two time points.
@@ -135,7 +135,7 @@ class TimeSpan {
     return `${this.delta} mins`
   }
 
-};
+}
 
 /**
  * Represents a timeline that starts and ends with timepoints.
@@ -228,7 +228,7 @@ class Timeline {
   static fromJson(data) {
     return new Timeline(data.markArr, data.currid, data.date);
   }
-};
+}
 
 /**
  * Handler of Timelines.
@@ -287,7 +287,7 @@ class TimelineStorage {
   clearHistory() {
     this.timelineHistory = [];
     this.newTimeline();
-  };
+  }
 
   /**
    * Save the current timeline history to browser local storage.
@@ -313,8 +313,6 @@ class TimelineStorage {
   }
 }
 
-// main =======================================================================
-
 function exportFile(json, fname) {
     let content = "data:application/json;charset=utf-8," + json;
     let exportFileDefaultName = `timeline-export_${fname}.json`;
@@ -325,63 +323,4 @@ function exportFile(json, fname) {
     linkElement.remove();
 }
 
-const TimelineApp = (function () {
-  storage = new TimelineStorage();
-
-  return {
-    data() {
-      return {
-        storage: storage,
-        currentTag: '',
-      }
-    },
-    methods: {
-      addMark: function () {
-        this.storage.currentTimeline.addMark();
-      },
-      saveHistory: function () {
-        this.storage.saveHistory();
-      },
-      clearHistory: function () {
-        this.storage.clearHistory();
-      },
-      newTimeline: function () {
-        this.storage.newTimeline();
-      },
-      exportFile: function () {
-        exportFile(this.storage.exportJSON(), this.storage.currentTimeline.date.toString())
-      },
-      selectMark: function(mark, event) {
-        this.activeMark = mark;
-        if (this.activeElement) {
-          this.removeClass(this.activeElement, 'active');
-        }
-        this.activeElement = event.target;
-        this.addClass(this.activeElement, 'active');
-      },
-      addClass: function(el, cname) {
-        el.classList.add(cname);
-      },
-      removeClass: function(el, cname) {
-        el.classList.remove(cname);
-      },
-      addTag: function() {
-        if (this.currentTag) {
-          this.activeMark.addTag(this.currentTag);
-        }
-      },
-      updateLine() {
-        this.$refs.timelineLine.style.top = `${this.$refs.timelineList.offsetTop + 10}px`
-        this.$refs.timelineLine.style.height = `${this.$refs.timelineList.clientHeight - 20}px`;
-      }
-    },
-    updated() {
-      this.updateLine();
-    },
-    mounted() {
-      this.updateLine();
-    },
-  };
-})();
-
-const vm = Vue.createApp(TimelineApp).mount('#timeline-app')
+export { TimelineStorage, exportFile }
